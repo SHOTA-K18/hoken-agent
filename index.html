@@ -4,939 +4,202 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HokenAgent — 保険代理店管理システム</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #F5F3EE;
-  --bg2: #EDEBE5;
-  --bg3: #E4E1D9;
-  --surface: #FDFCFA;
-  --surface2: #F7F5F0;
-  --text: #1A1916;
-  --text2: #6B6860;
-  --text3: #9E9C98;
-  --border: rgba(26,25,22,0.10);
-  --border2: rgba(26,25,22,0.16);
-  --accent: #1E4D8C;
-  --accent-bg: #EBF0F8;
-  --accent-text: #1E4D8C;
-  --amber: #B45309;
-  --amber-bg: #FEF3C7;
-  --red: #B91C1C;
-  --red-bg: #FEE2E2;
-  --green: #166534;
-  --green-bg: #DCFCE7;
-  --radius: 10px;
-  --radius-sm: 6px;
-  --sidebar: 220px;
-  --header: 56px;
-  --font: 'DM Sans', 'Noto Sans JP', sans-serif;
-  --mono: 'DM Mono', monospace;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-  font-size: 14px;
-  letter-spacing: -0.01em;
-}
-
-/* ===== SIDEBAR ===== */
-.sidebar {
-  width: var(--sidebar);
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-.sidebar-logo {
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid var(--border);
-}
-
-.logo-mark {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-
-.logo-icon {
-  width: 30px;
-  height: 30px;
-  background: var(--accent);
-  border-radius: 7px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-icon svg { width: 16px; height: 16px; }
-
-.logo-name {
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: var(--text);
-}
-
-.logo-sub {
-  font-size: 10px;
-  color: var(--text3);
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  margin-top: 1px;
-}
-
-.sidebar-nav {
-  padding: 12px 10px;
-  flex: 1;
-}
-
-.nav-section-label {
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--text3);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0 10px;
-  margin: 14px 0 6px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 8px 10px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  color: var(--text2);
-  font-size: 13.5px;
-  font-weight: 400;
-  transition: all 0.12s;
-  user-select: none;
-  position: relative;
-}
-
-.nav-item:hover { background: var(--bg2); color: var(--text); }
-
-.nav-item.active {
-  background: var(--accent-bg);
-  color: var(--accent-text);
-  font-weight: 500;
-}
-
-.nav-icon {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  opacity: 0.7;
-}
-
-.nav-item.active .nav-icon { opacity: 1; }
-
-.nav-badge {
-  margin-left: auto;
-  background: var(--amber);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 1px 6px;
-  border-radius: 20px;
-  font-family: var(--mono);
-}
-
-.nav-badge.red { background: var(--red); }
-
-.sidebar-user {
-  padding: 12px 14px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fff;
-  flex-shrink: 0;
-}
-
-.user-info { overflow: hidden; }
-.user-name { font-size: 12.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.user-role { font-size: 11px; color: var(--text3); }
-
-/* ===== MAIN ===== */
-.main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-width: 0;
-}
-
-.topbar {
-  height: var(--header);
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
-  gap: 16px;
-  flex-shrink: 0;
-}
-
-.page-title {
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-.topbar-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid var(--border2);
-  background: var(--surface);
-  color: var(--text);
-  font-family: var(--font);
-  transition: all 0.12s;
-  letter-spacing: -0.01em;
-}
-
-.btn:hover { background: var(--bg2); }
-
-.btn-primary {
-  background: var(--accent);
-  color: #fff;
-  border-color: transparent;
-}
-
-.btn-primary:hover { background: #183f75; }
-
-.btn svg { width: 14px; height: 14px; }
-
-.content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px;
-}
-
-/* ===== VIEWS ===== */
-.view { display: none; }
-.view.active { display: block; }
-
-/* ===== DASHBOARD ===== */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 24px;
-}
-
-.kpi-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 20px;
-}
-
-.kpi-label {
-  font-size: 12px;
-  color: var(--text3);
-  font-weight: 400;
-  margin-bottom: 8px;
-  letter-spacing: 0.01em;
-}
-
-.kpi-value {
-  font-size: 26px;
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 1;
-}
-
-.kpi-sub {
-  font-size: 11px;
-  color: var(--text3);
-  margin-top: 5px;
-}
-
-.kpi-card.amber .kpi-value { color: var(--amber); }
-.kpi-card.red .kpi-value { color: var(--red); }
-.kpi-card.green .kpi-value { color: var(--green); }
-.kpi-card.accent .kpi-value { color: var(--accent); }
-
-.dash-grid {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 16px;
-}
-
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.panel-header {
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.panel-title {
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-.panel-link {
-  font-size: 12px;
-  color: var(--accent-text);
-  cursor: pointer;
-  font-weight: 500;
-}
-.panel-link:hover { text-decoration: underline; }
-
-/* Alert list */
-.alert-list { padding: 4px 0; }
-
-.alert-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 18px;
-  border-bottom: 1px solid var(--border);
-  cursor: pointer;
-  transition: background 0.1s;
-}
-
-.alert-item:last-child { border-bottom: none; }
-.alert-item:hover { background: var(--bg2); }
-
-.alert-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.alert-dot.red { background: var(--red); }
-.alert-dot.amber { background: var(--amber); }
-.alert-dot.green { background: var(--green); }
-
-.alert-name { font-size: 13px; font-weight: 500; }
-.alert-desc { font-size: 12px; color: var(--text3); margin-top: 1px; }
-.alert-days {
-  margin-left: auto;
-  font-size: 11px;
-  font-family: var(--mono);
-  font-weight: 500;
-  flex-shrink: 0;
-}
-.alert-days.red { color: var(--red); }
-.alert-days.amber { color: var(--amber); }
-
-/* Activity feed */
-.activity-item {
-  display: flex;
-  gap: 12px;
-  padding: 12px 18px;
-  border-bottom: 1px solid var(--border);
-}
-.activity-item:last-child { border-bottom: none; }
-
-.activity-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--border2);
-  flex-shrink: 0;
-  margin-top: 5px;
-}
-
-.activity-text { font-size: 12.5px; color: var(--text2); line-height: 1.5; }
-.activity-time { font-size: 11px; color: var(--text3); margin-top: 3px; font-family: var(--mono); }
-
-/* ===== CLIENT LIST ===== */
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--surface);
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-sm);
-  padding: 7px 12px;
-  flex: 1;
-  max-width: 320px;
-}
-
-.search-box input {
-  border: none;
-  outline: none;
-  background: transparent;
-  font-family: var(--font);
-  font-size: 13px;
-  color: var(--text);
-  width: 100%;
-}
-
-.search-box svg { width: 14px; height: 14px; color: var(--text3); flex-shrink: 0; }
-
-.filter-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--text2);
-  cursor: pointer;
-  font-family: var(--font);
-  transition: all 0.12s;
-}
-
-.filter-btn:hover { background: var(--bg2); color: var(--text); }
-.filter-btn.active { background: var(--accent-bg); color: var(--accent-text); border-color: var(--accent); }
-
-.count-label {
-  margin-left: auto;
-  font-size: 12px;
-  color: var(--text3);
-  font-family: var(--mono);
-}
-
-/* Table */
-.table-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead th {
-  background: var(--bg2);
-  padding: 10px 16px;
-  text-align: left;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--text3);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
-
-thead th:first-child { padding-left: 18px; }
-
-tbody tr {
-  border-bottom: 1px solid var(--border);
-  cursor: pointer;
-  transition: background 0.1s;
-}
-
-tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: var(--bg); }
-
-tbody td {
-  padding: 13px 16px;
-  font-size: 13px;
-  vertical-align: middle;
-}
-
-tbody td:first-child { padding-left: 18px; }
-
-.td-name { font-weight: 500; }
-.td-kana { font-size: 11px; color: var(--text3); margin-top: 1px; }
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.badge.green { background: var(--green-bg); color: var(--green); }
-.badge.amber { background: var(--amber-bg); color: var(--amber); }
-.badge.red { background: var(--red-bg); color: var(--red); }
-.badge.blue { background: var(--accent-bg); color: var(--accent-text); }
-.badge.gray { background: var(--bg3); color: var(--text2); }
-
-.td-expiry {
-  font-family: var(--mono);
-  font-size: 12.5px;
-}
-
-.td-expiry.urgent { color: var(--red); font-weight: 500; }
-.td-expiry.soon { color: var(--amber); font-weight: 500; }
-
-/* ===== CLIENT DETAIL ===== */
-.detail-layout {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 16px;
-}
-
-.detail-sidebar { display: flex; flex-direction: column; gap: 14px; }
-
-.client-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-}
-
-.client-avatar {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 14px;
-}
-
-.client-name { font-size: 17px; font-weight: 600; letter-spacing: -0.03em; }
-.client-kana { font-size: 11.5px; color: var(--text3); margin-top: 2px; }
-
-.client-meta {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.meta-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.meta-label {
-  font-size: 11px;
-  color: var(--text3);
-  min-width: 60px;
-  padding-top: 1px;
-}
-
-.meta-value { font-size: 13px; font-weight: 400; }
-
-.divider { height: 1px; background: var(--border); margin: 14px 0; }
-
-.tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
-
-.detail-main { display: flex; flex-direction: column; gap: 14px; }
-
-.policy-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.policy-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-}
-
-.policy-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.policy-icon.life { background: #EBF0F8; }
-.policy-icon.fire { background: #FEF3C7; }
-.policy-icon.car { background: #DCFCE7; }
-.policy-icon.medical { background: #FEE2E2; }
-
-.policy-title { font-size: 14px; font-weight: 600; letter-spacing: -0.02em; }
-.policy-company { font-size: 12px; color: var(--text3); margin-top: 1px; }
-
-.policy-actions { margin-left: auto; display: flex; gap: 6px; }
-
-.policy-body {
-  padding: 14px 18px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-}
-
-.policy-field { }
-.pf-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
-.pf-value { font-size: 13px; font-weight: 500; }
-.pf-value.mono { font-family: var(--mono); font-size: 12.5px; }
-
-/* ===== REMINDER ===== */
-.reminder-layout {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 16px;
-}
-
-.calendar-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.cal-header {
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.cal-nav {
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: var(--surface);
-  transition: background 0.1s;
-}
-
-.cal-nav:hover { background: var(--bg2); }
-
-.cal-month {
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  flex: 1;
-  text-align: center;
-}
-
-.cal-grid { padding: 16px; }
-
-.cal-dow {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  margin-bottom: 6px;
-}
-
-.cal-dow-cell {
-  text-align: center;
-  font-size: 11px;
-  color: var(--text3);
-  font-weight: 600;
-  padding: 4px 0;
-  letter-spacing: 0.04em;
-}
-
-.cal-days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-}
-
-.cal-day {
-  aspect-ratio: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  font-size: 12.5px;
-  cursor: pointer;
-  transition: background 0.1s;
-  position: relative;
-  gap: 2px;
-}
-
-.cal-day:hover { background: var(--bg2); }
-.cal-day.today { background: var(--accent); color: #fff; font-weight: 600; }
-.cal-day.other-month { color: var(--text3); }
-.cal-day.has-event .event-dot { display: block; }
-
-.event-dot {
-  display: none;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--amber);
-}
-
-.cal-day.today .event-dot { background: rgba(255,255,255,0.8); }
-.cal-day.red-event .event-dot { background: var(--red); }
-
-/* Reminder list */
-.reminder-list { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
-
-.reminder-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  cursor: pointer;
-  transition: all 0.12s;
-}
-
-.reminder-item:hover { border-color: var(--border2); background: var(--surface2); }
-
-.reminder-item.done { opacity: 0.5; }
-
-.remind-bar {
-  width: 3px;
-  border-radius: 2px;
-  flex-shrink: 0;
-  align-self: stretch;
-  min-height: 40px;
-}
-
-.remind-bar.red { background: var(--red); }
-.remind-bar.amber { background: var(--amber); }
-.remind-bar.green { background: var(--green); }
-
-.remind-body { flex: 1; min-width: 0; }
-.remind-name { font-size: 13px; font-weight: 500; }
-.remind-desc { font-size: 12px; color: var(--text3); margin-top: 3px; }
-
-.remind-meta { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
-
-.remind-check {
-  width: 18px;
-  height: 18px;
-  border: 1.5px solid var(--border2);
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.1s;
-  margin-top: 3px;
-  background: var(--surface);
-}
-
-.remind-check:hover { border-color: var(--accent); }
-.reminder-item.done .remind-check { background: var(--green); border-color: var(--green); }
-
-/* Right panel */
-.remind-stats { display: flex; flex-direction: column; gap: 12px; }
-
-.stat-mini {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.stat-mini-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.stat-mini-icon.red { background: var(--red-bg); }
-.stat-mini-icon.amber { background: var(--amber-bg); }
-.stat-mini-icon.green { background: var(--green-bg); }
-
-.stat-mini-num { font-size: 22px; font-weight: 600; letter-spacing: -0.04em; }
-.stat-mini-label { font-size: 11.5px; color: var(--text3); }
-.stat-mini-num.red { color: var(--red); }
-.stat-mini-num.amber { color: var(--amber); }
-.stat-mini-num.green { color: var(--green); }
-
-/* ===== MODAL ===== */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
-  z-index: 100;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-overlay.open { display: flex; }
-
-.modal {
-  background: var(--surface);
-  border: 1px solid var(--border2);
-  border-radius: 14px;
-  width: 520px;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-}
-
-.modal-header {
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.modal-title { font-size: 15px; font-weight: 600; letter-spacing: -0.03em; }
-
-.modal-close {
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: transparent;
-  color: var(--text2);
-  transition: all 0.1s;
-}
-
-.modal-close:hover { background: var(--bg2); }
-
-.modal-body { padding: 20px 24px; }
-
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.form-col { display: flex; flex-direction: column; gap: 14px; }
-.form-full { grid-column: 1 / -1; }
-
-.field { display: flex; flex-direction: column; gap: 5px; }
-.field-label { font-size: 11.5px; font-weight: 500; color: var(--text2); letter-spacing: 0.01em; }
-
-.field input, .field select, .field textarea {
-  padding: 8px 11px;
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-sm);
-  font-family: var(--font);
-  font-size: 13px;
-  color: var(--text);
-  background: var(--bg);
-  outline: none;
-  transition: border-color 0.1s;
-}
-
-.field input:focus, .field select:focus, .field textarea:focus {
-  border-color: var(--accent);
-  background: var(--surface);
-}
-
-.field textarea { resize: vertical; min-height: 70px; }
-
-.modal-footer {
-  padding: 14px 24px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-/* ===== BACK BTN ===== */
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--text2);
-  cursor: pointer;
-  padding: 5px 0;
-  margin-bottom: 16px;
-  transition: color 0.1s;
-  font-weight: 400;
-}
-
-.back-btn:hover { color: var(--text); }
-.back-btn svg { width: 14px; height: 14px; }
-
-/* ===== SCROLLBAR ===== */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-
-/* ===== EMPTY STATE ===== */
-.empty { padding: 40px; text-align: center; color: var(--text3); font-size: 13px; }
-
-/* ===== TOOLTIP ===== */
-.tooltip-wrap { position: relative; display: inline-flex; }
+:root{--bg:#F5F3EE;--bg2:#EDEBE5;--bg3:#E4E1D9;--surface:#FDFCFA;--surface2:#F7F5F0;--text:#1A1916;--text2:#6B6860;--text3:#9E9C98;--border:rgba(26,25,22,0.10);--border2:rgba(26,25,22,0.16);--accent:#1E4D8C;--accent-bg:#EBF0F8;--accent-text:#1E4D8C;--amber:#B45309;--amber-bg:#FEF3C7;--red:#B91C1C;--red-bg:#FEE2E2;--green:#166534;--green-bg:#DCFCE7;--radius:10px;--radius-sm:6px;--sidebar:220px;--header:56px;--font:'DM Sans','Noto Sans JP',sans-serif;--mono:'DM Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;font-size:14px;letter-spacing:-0.01em}
+.sidebar{width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow-y:auto}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+.logo-mark{display:flex;align-items:center;gap:9px}
+.logo-icon{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.logo-name{font-size:15px;font-weight:600;letter-spacing:-0.03em}
+.logo-sub{font-size:10px;color:var(--text3);margin-top:1px;letter-spacing:0.02em}
+.sidebar-nav{padding:12px 10px;flex:1}
+.nav-section-label{font-size:10px;font-weight:500;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;padding:0 10px;margin:14px 0 6px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;color:var(--text2);font-size:13.5px;transition:all 0.12s;user-select:none}
+.nav-item:hover{background:var(--bg2);color:var(--text)}
+.nav-item.active{background:var(--accent-bg);color:var(--accent-text);font-weight:500}
+.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:0.7}
+.nav-item.active .nav-icon{opacity:1}
+.nav-badge{margin-left:auto;background:var(--amber);color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;font-family:var(--mono)}
+.nav-badge.red{background:var(--red)}
+.sidebar-user{padding:12px 14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.user-name{font-size:12.5px;font-weight:500}
+.user-role{font-size:11px;color:var(--text3)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:var(--header);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;flex-shrink:0}
+.page-title{font-size:15px;font-weight:600;letter-spacing:-0.02em}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-family:var(--font);transition:all 0.12s;letter-spacing:-0.01em}
+.btn:hover{background:var(--bg2)}
+.btn-primary{background:var(--accent);color:#fff;border-color:transparent}
+.btn-primary:hover{background:#183f75}
+.btn svg{width:14px;height:14px}
+.content{flex:1;overflow-y:auto;padding:24px}
+.view{display:none}
+.view.active{display:block}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px}
+.kpi-label{font-size:12px;color:var(--text3);margin-bottom:8px}
+.kpi-value{font-size:26px;font-weight:600;letter-spacing:-0.04em;line-height:1}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:5px}
+.kpi-card.amber .kpi-value{color:var(--amber)}
+.kpi-card.red .kpi-value{color:var(--red)}
+.kpi-card.green .kpi-value{color:var(--green)}
+.kpi-card.accent .kpi-value{color:var(--accent)}
+.dash-grid{display:grid;grid-template-columns:1fr 340px;gap:16px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.panel-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-size:13px;font-weight:600;letter-spacing:-0.02em}
+.panel-link{font-size:12px;color:var(--accent-text);cursor:pointer;font-weight:500}
+.alert-item{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s}
+.alert-item:last-child{border-bottom:none}
+.alert-item:hover{background:var(--bg2)}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.alert-dot.red{background:var(--red)}
+.alert-dot.amber{background:var(--amber)}
+.alert-dot.green{background:var(--green)}
+.alert-name{font-size:13px;font-weight:500}
+.alert-desc{font-size:12px;color:var(--text3);margin-top:1px}
+.alert-days{margin-left:auto;font-size:11px;font-family:var(--mono);font-weight:500;flex-shrink:0}
+.alert-days.red{color:var(--red)}
+.alert-days.amber{color:var(--amber)}
+.activity-item{display:flex;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);flex-shrink:0;margin-top:5px}
+.activity-text{font-size:12.5px;color:var(--text2);line-height:1.5}
+.activity-time{font-size:11px;color:var(--text3);margin-top:3px;font-family:var(--mono)}
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:7px 12px;flex:1;max-width:320px}
+.search-box input{border:none;outline:none;background:transparent;font-family:var(--font);font-size:13px;color:var(--text);width:100%}
+.search-box svg{width:14px;height:14px;color:var(--text3);flex-shrink:0}
+.filter-btn{display:flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);font-size:12.5px;font-weight:500;color:var(--text2);cursor:pointer;font-family:var(--font);transition:all 0.12s}
+.filter-btn:hover{background:var(--bg2);color:var(--text)}
+.filter-btn.active{background:var(--accent-bg);color:var(--accent-text);border-color:var(--accent)}
+.count-label{margin-left:auto;font-size:12px;color:var(--text3);font-family:var(--mono)}
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--bg2);padding:10px 16px;text-align:left;font-size:11.5px;font-weight:600;color:var(--text3);letter-spacing:0.04em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap}
+thead th:first-child{padding-left:18px}
+tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg)}
+tbody td{padding:13px 16px;font-size:13px;vertical-align:middle}
+tbody td:first-child{padding-left:18px}
+.td-name{font-weight:500}
+.td-kana{font-size:11px;color:var(--text3);margin-top:1px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+.badge.green{background:var(--green-bg);color:var(--green)}
+.badge.amber{background:var(--amber-bg);color:var(--amber)}
+.badge.red{background:var(--red-bg);color:var(--red)}
+.badge.blue{background:var(--accent-bg);color:var(--accent-text)}
+.badge.gray{background:var(--bg3);color:var(--text2)}
+.td-expiry{font-family:var(--mono);font-size:12.5px}
+.td-expiry.urgent{color:var(--red);font-weight:500}
+.td-expiry.soon{color:var(--amber);font-weight:500}
+.detail-layout{display:grid;grid-template-columns:300px 1fr;gap:16px}
+.detail-sidebar{display:flex;flex-direction:column;gap:14px}
+.client-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.client-avatar{width:52px;height:52px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;color:#fff;margin-bottom:14px}
+.client-name{font-size:17px;font-weight:600;letter-spacing:-0.03em}
+.client-kana{font-size:11.5px;color:var(--text3);margin-top:2px}
+.client-meta{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+.meta-row{display:flex;align-items:flex-start;gap:10px}
+.meta-label{font-size:11px;color:var(--text3);min-width:60px;padding-top:1px}
+.meta-value{font-size:13px}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.detail-main{display:flex;flex-direction:column;gap:14px}
+.policy-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.policy-header{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.policy-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.policy-icon.life{background:#EBF0F8}
+.policy-icon.fire{background:#FEF3C7}
+.policy-icon.medical{background:#FEE2E2}
+.policy-title{font-size:14px;font-weight:600;letter-spacing:-0.02em}
+.policy-company{font-size:12px;color:var(--text3);margin-top:1px}
+.policy-actions{margin-left:auto;display:flex;gap:6px}
+.policy-body{padding:14px 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.pf-label{font-size:11px;color:var(--text3);margin-bottom:4px}
+.pf-value{font-size:13px;font-weight:500}
+.pf-value.mono{font-family:var(--mono);font-size:12.5px}
+.reminder-layout{display:grid;grid-template-columns:1fr 300px;gap:16px}
+.calendar-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.cal-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.cal-nav{width:28px;height:28px;border:1px solid var(--border2);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--surface);transition:background 0.1s}
+.cal-nav:hover{background:var(--bg2)}
+.cal-month{font-size:14px;font-weight:600;flex:1;text-align:center}
+.cal-grid{padding:16px}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px}
+.cal-dow-cell{text-align:center;font-size:11px;color:var(--text3);font-weight:600;padding:4px 0;letter-spacing:0.04em}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;font-size:12.5px;cursor:pointer;transition:background 0.1s;position:relative;gap:2px}
+.cal-day:hover{background:var(--bg2)}
+.cal-day.today{background:var(--accent);color:#fff;font-weight:600}
+.cal-day.other-month{color:var(--text3)}
+.event-dot{display:none;width:4px;height:4px;border-radius:50%;background:var(--amber)}
+.cal-day.has-event .event-dot,.cal-day.red-event .event-dot,.cal-day.amber-event .event-dot{display:block}
+.cal-day.red-event .event-dot{background:var(--red)}
+.cal-day.today .event-dot{background:rgba(255,255,255,0.8)}
+.reminder-list{display:flex;flex-direction:column;gap:8px;padding-top:4px}
+.reminder-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:all 0.12s}
+.reminder-item:hover{border-color:var(--border2)}
+.reminder-item.done{opacity:0.5}
+.remind-bar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:40px}
+.remind-bar.red{background:var(--red)}
+.remind-bar.amber{background:var(--amber)}
+.remind-bar.green{background:var(--green)}
+.remind-body{flex:1;min-width:0}
+.remind-name{font-size:13px;font-weight:500}
+.remind-desc{font-size:12px;color:var(--text3);margin-top:3px}
+.remind-meta{display:flex;align-items:center;gap:6px;margin-top:8px}
+.remind-check{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.1s;margin-top:3px;background:var(--surface)}
+.remind-check:hover{border-color:var(--accent)}
+.reminder-item.done .remind-check{background:var(--green);border-color:var(--green)}
+.remind-stats{display:flex;flex-direction:column;gap:12px}
+.stat-mini{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px}
+.stat-mini-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-mini-icon.red{background:var(--red-bg)}
+.stat-mini-icon.amber{background:var(--amber-bg)}
+.stat-mini-icon.green{background:var(--green-bg)}
+.stat-mini-num{font-size:22px;font-weight:600;letter-spacing:-0.04em}
+.stat-mini-label{font-size:11.5px;color:var(--text3)}
+.stat-mini-num.red{color:var(--red)}
+.stat-mini-num.amber{color:var(--amber)}
+.stat-mini-num.green{color:var(--green)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:14px;width:520px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:15px;font-weight:600;letter-spacing:-0.03em}
+.modal-close{width:28px;height:28px;border:1px solid var(--border2);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;color:var(--text2);transition:all 0.1s}
+.modal-close:hover{background:var(--bg2)}
+.modal-body{padding:20px 24px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-full{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:5px}
+.field-label{font-size:11.5px;font-weight:500;color:var(--text2)}
+.field input,.field select,.field textarea{padding:8px 11px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;color:var(--text);background:var(--bg);outline:none;transition:border-color 0.1s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);background:var(--surface)}
+.field textarea{resize:vertical;min-height:70px}
+.modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer;padding:5px 0;margin-bottom:16px;transition:color 0.1s}
+.back-btn:hover{color:var(--text)}
+.back-btn svg{width:14px;height:14px}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-mark">
       <div class="logo-icon">
-        <svg viewBox="0 0 16 16" fill="none">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <rect x="2" y="2" width="5" height="7" rx="1" fill="white"/>
           <rect x="9" y="2" width="5" height="4" rx="1" fill="white" opacity="0.7"/>
           <rect x="9" y="8" width="5" height="6" rx="1" fill="white" opacity="0.7"/>
@@ -949,62 +212,38 @@ tbody td:first-child { padding-left: 18px; }
       </div>
     </div>
   </div>
-
   <nav class="sidebar-nav">
     <div class="nav-section-label">メイン</div>
-
-    <div class="nav-item active" onclick="showView('dashboard', this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-        <rect x="1" y="1" width="6" height="6" rx="1.5"/>
-        <rect x="9" y="1" width="6" height="6" rx="1.5"/>
-        <rect x="1" y="9" width="6" height="6" rx="1.5"/>
-        <rect x="9" y="9" width="6" height="6" rx="1.5"/>
-      </svg>
+    <div class="nav-item active" onclick="showView('dashboard',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
       ダッシュボード
     </div>
-
-    <div class="nav-item" onclick="showView('clients', this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="6" cy="5" r="3"/>
-        <path d="M1 14c0-3 2-5 5-5s5 2 5 5"/>
-        <path d="M11 3c1.5.5 2 2 2 2M11 7c2 0 4 1.5 4 4"/>
-      </svg>
+    <div class="nav-item" onclick="showView('clients',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="3"/><path d="M1 14c0-3 2-5 5-5s5 2 5 5"/><path d="M11 3c1.5.5 2 2 2 2M11 7c2 0 4 1.5 4 4"/></svg>
       顧客一覧
       <span class="nav-badge">142</span>
     </div>
-
-    <div class="nav-item" onclick="showView('reminders', this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M8 2a4 4 0 00-4 4v3l-1 2h10l-1-2V6a4 4 0 00-4-4z"/>
-        <path d="M6.5 12.5a1.5 1.5 0 003 0"/>
-      </svg>
+    <div class="nav-item" onclick="showView('reminders',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a4 4 0 00-4 4v3l-1 2h10l-1-2V6a4 4 0 00-4-4z"/><path d="M6.5 12.5a1.5 1.5 0 003 0"/></svg>
       リマインド
       <span class="nav-badge red">3</span>
     </div>
-
     <div class="nav-section-label">レポート</div>
-
-    <div class="nav-item" onclick="showView('report', this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M2 12V4l4 3 2-4 2 4 4-3v8H2z"/>
-      </svg>
+    <div class="nav-item" onclick="showView('report',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12V4l4 3 2-4 2 4 4-3v8H2z"/></svg>
       集計・分析
     </div>
   </nav>
-
   <div class="sidebar-user">
     <div class="user-avatar">鏡</div>
-    <div class="user-info">
+    <div>
       <div class="user-name">鏡 祥太</div>
       <div class="user-role">代理店担当者</div>
     </div>
   </div>
 </aside>
 
-<!-- MAIN -->
 <div class="main">
-
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="page-title" id="page-title">ダッシュボード</div>
     <div class="topbar-right">
@@ -1014,181 +253,68 @@ tbody td:first-child { padding-left: 18px; }
       </button>
     </div>
   </div>
-
   <div class="content">
 
-    <!-- ===== VIEW: DASHBOARD ===== -->
+    <!-- DASHBOARD -->
     <div class="view active" id="view-dashboard">
       <div class="kpi-grid">
-        <div class="kpi-card accent">
-          <div class="kpi-label">顧客総数</div>
-          <div class="kpi-value">142</div>
-          <div class="kpi-sub">先月比 +3</div>
-        </div>
-        <div class="kpi-card amber">
-          <div class="kpi-label">今月満期</div>
-          <div class="kpi-value">8件</div>
-          <div class="kpi-sub">うち未対応 3件</div>
-        </div>
-        <div class="kpi-card red">
-          <div class="kpi-label">期限超過</div>
-          <div class="kpi-value">2件</div>
-          <div class="kpi-sub">要即時対応</div>
-        </div>
-        <div class="kpi-card green">
-          <div class="kpi-label">契約総保険料</div>
-          <div class="kpi-value">¥12.4M</div>
-          <div class="kpi-sub">年間合計</div>
-        </div>
+        <div class="kpi-card accent"><div class="kpi-label">顧客総数</div><div class="kpi-value">142</div><div class="kpi-sub">先月比 +3</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">今月満期</div><div class="kpi-value">8件</div><div class="kpi-sub">うち未対応 3件</div></div>
+        <div class="kpi-card red"><div class="kpi-label">期限超過</div><div class="kpi-value">2件</div><div class="kpi-sub">要即時対応</div></div>
+        <div class="kpi-card green"><div class="kpi-label">契約総保険料</div><div class="kpi-value">¥12.4M</div><div class="kpi-sub">年間合計</div></div>
       </div>
-
       <div class="dash-grid">
-        <!-- Upcoming alerts -->
         <div class="panel">
           <div class="panel-header">
             <div class="panel-title">満期・更新アラート</div>
-            <span class="panel-link" onclick="showView('reminders', document.querySelector('[onclick*=reminders]'))">すべて見る →</span>
+            <span class="panel-link" onclick="showView('reminders',document.querySelector('[onclick*=reminders]'))">すべて見る →</span>
           </div>
-          <div class="alert-list">
-            <div class="alert-item" onclick="openClientDetail('yamada')">
-              <div class="alert-dot red"></div>
-              <div>
-                <div class="alert-name">山田 太郎</div>
-                <div class="alert-desc">生命保険 / ○○生命 / 満期更新</div>
-              </div>
-              <div class="alert-days red">あと 3日</div>
-            </div>
-            <div class="alert-item" onclick="openClientDetail('tanaka')">
-              <div class="alert-dot red"></div>
-              <div>
-                <div class="alert-name">田中 美咲</div>
-                <div class="alert-desc">自動車保険 / △△損保 / 更新</div>
-              </div>
-              <div class="alert-days red">あと 7日</div>
-            </div>
-            <div class="alert-item">
-              <div class="alert-dot amber"></div>
-              <div>
-                <div class="alert-name">佐藤 健一</div>
-                <div class="alert-desc">火災保険 / □□共済 / 満期</div>
-              </div>
-              <div class="alert-days amber">あと 18日</div>
-            </div>
-            <div class="alert-item">
-              <div class="alert-dot amber"></div>
-              <div>
-                <div class="alert-name">鈴木 花子</div>
-                <div class="alert-desc">医療保険 / ◇◇生命 / 更新</div>
-              </div>
-              <div class="alert-days amber">あと 24日</div>
-            </div>
-            <div class="alert-item">
-              <div class="alert-dot amber"></div>
-              <div>
-                <div class="alert-name">伊藤 誠</div>
-                <div class="alert-desc">生命保険 / ○○生命 / 変額</div>
-              </div>
-              <div class="alert-days amber">あと 29日</div>
-            </div>
-            <div class="alert-item">
-              <div class="alert-dot green"></div>
-              <div>
-                <div class="alert-name">渡辺 律子</div>
-                <div class="alert-desc">火災保険 / △△損保</div>
-              </div>
-              <div class="alert-days" style="color:var(--text3)">あと 45日</div>
-            </div>
-          </div>
+          <div class="alert-item" onclick="openClientDetail('yamada')"><div class="alert-dot red"></div><div><div class="alert-name">山田 太郎</div><div class="alert-desc">生命保険 / ○○生命 / 満期更新</div></div><div class="alert-days red">あと 3日</div></div>
+          <div class="alert-item" onclick="openClientDetail('tanaka')"><div class="alert-dot red"></div><div><div class="alert-name">田中 美咲</div><div class="alert-desc">自動車保険 / △△損保 / 更新</div></div><div class="alert-days red">あと 7日</div></div>
+          <div class="alert-item"><div class="alert-dot amber"></div><div><div class="alert-name">佐藤 健一</div><div class="alert-desc">火災保険 / □□共済 / 満期</div></div><div class="alert-days amber">あと 18日</div></div>
+          <div class="alert-item"><div class="alert-dot amber"></div><div><div class="alert-name">鈴木 花子</div><div class="alert-desc">医療保険 / ◇◇生命 / 更新</div></div><div class="alert-days amber">あと 24日</div></div>
+          <div class="alert-item"><div class="alert-dot amber"></div><div><div class="alert-name">伊藤 誠</div><div class="alert-desc">生命保険 / ○○生命 / 変額</div></div><div class="alert-days amber">あと 29日</div></div>
+          <div class="alert-item"><div class="alert-dot green"></div><div><div class="alert-name">渡辺 律子</div><div class="alert-desc">火災保険 / △△損保</div></div><div class="alert-days" style="color:var(--text3)">あと 45日</div></div>
         </div>
-
-        <!-- Activity -->
         <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">最近の活動</div>
-          </div>
-          <div class="alert-list">
-            <div class="activity-item">
-              <div class="activity-dot"></div>
-              <div>
-                <div class="activity-text"><strong>山田 太郎</strong> に連絡済みマークを付けました</div>
-                <div class="activity-time">今日 14:32</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-dot"></div>
-              <div>
-                <div class="activity-text"><strong>中村 健二</strong> の契約情報を更新しました</div>
-                <div class="activity-time">今日 11:04</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-dot"></div>
-              <div>
-                <div class="activity-text">新規顧客 <strong>高橋 涼子</strong> を追加しました</div>
-                <div class="activity-time">昨日 16:20</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-dot"></div>
-              <div>
-                <div class="activity-text"><strong>田中 美咲</strong> の自動車保険が更新期限に近づいています</div>
-                <div class="activity-time">昨日 09:00</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-dot"></div>
-              <div>
-                <div class="activity-text"><strong>佐藤 健一</strong> に書類送付しました</div>
-                <div class="activity-time">4月5日</div>
-              </div>
-            </div>
-          </div>
+          <div class="panel-header"><div class="panel-title">最近の活動</div></div>
+          <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text"><strong>山田 太郎</strong> に連絡済みマークを付けました</div><div class="activity-time">今日 14:32</div></div></div>
+          <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text"><strong>中村 健二</strong> の契約情報を更新しました</div><div class="activity-time">今日 11:04</div></div></div>
+          <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text">新規顧客 <strong>高橋 涼子</strong> を追加しました</div><div class="activity-time">昨日 16:20</div></div></div>
+          <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text"><strong>田中 美咲</strong> の自動車保険が更新期限に近づいています</div><div class="activity-time">昨日 09:00</div></div></div>
+          <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text"><strong>佐藤 健一</strong> に書類送付しました</div><div class="activity-time">4月5日</div></div></div>
         </div>
       </div>
     </div>
 
-    <!-- ===== VIEW: CLIENTS ===== -->
+    <!-- CLIENTS -->
     <div class="view" id="view-clients">
       <div class="toolbar">
         <div class="search-box">
           <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4"/><path d="M9.5 9.5l3 3"/></svg>
           <input type="text" placeholder="顧客名・電話番号で検索..." oninput="filterTable(this.value)">
         </div>
-        <button class="filter-btn active" onclick="filterStatus('all', this)">すべて</button>
-        <button class="filter-btn" onclick="filterStatus('urgent', this)">要対応</button>
-        <button class="filter-btn" onclick="filterStatus('soon', this)">30日以内</button>
-        <button class="filter-btn" onclick="filterStatus('normal', this)">正常</button>
+        <button class="filter-btn active" onclick="filterStatus('all',this)">すべて</button>
+        <button class="filter-btn" onclick="filterStatus('urgent',this)">要対応</button>
+        <button class="filter-btn" onclick="filterStatus('soon',this)">30日以内</button>
+        <button class="filter-btn" onclick="filterStatus('normal',this)">正常</button>
         <span class="count-label" id="client-count">142件</span>
       </div>
-
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>顧客名</th>
-              <th>保険種別</th>
-              <th>担当保険会社</th>
-              <th>最終満期日</th>
-              <th>保険料/年</th>
-              <th>ステータス</th>
-            </tr>
-          </thead>
-          <tbody id="client-tbody">
-            <!-- rows injected by JS -->
-          </tbody>
+          <thead><tr><th>顧客名</th><th>保険種別</th><th>担当保険会社</th><th>最終満期日</th><th>保険料/年</th><th>ステータス</th></tr></thead>
+          <tbody id="client-tbody"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- ===== VIEW: CLIENT DETAIL ===== -->
+    <!-- DETAIL -->
     <div class="view" id="view-detail">
-      <div class="back-btn" onclick="showView('clients', document.querySelector('[onclick*=clients]'))">
+      <div class="back-btn" onclick="showView('clients',document.querySelector('[onclick*=clients]'))">
         <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2L3 7l6 5"/></svg>
         顧客一覧に戻る
       </div>
-
       <div class="detail-layout">
-        <!-- Left -->
         <div class="detail-sidebar">
           <div class="client-card">
             <div class="client-avatar" id="d-avatar">山</div>
@@ -1196,296 +322,126 @@ tbody td:first-child { padding-left: 18px; }
             <div class="client-kana" id="d-kana">ヤマダ タロウ</div>
             <div class="divider"></div>
             <div class="client-meta">
-              <div class="meta-row">
-                <div class="meta-label">生年月日</div>
-                <div class="meta-value" id="d-dob">1983/06/12（40歳）</div>
-              </div>
-              <div class="meta-row">
-                <div class="meta-label">電話</div>
-                <div class="meta-value" id="d-tel">090-1234-5678</div>
-              </div>
-              <div class="meta-row">
-                <div class="meta-label">メール</div>
-                <div class="meta-value" id="d-email" style="font-size:12px">yamada@example.com</div>
-              </div>
-              <div class="meta-row">
-                <div class="meta-label">住所</div>
-                <div class="meta-value" id="d-addr">東京都新宿区 1-2-3</div>
-              </div>
-              <div class="meta-row">
-                <div class="meta-label">担当者</div>
-                <div class="meta-value">鏡 祥太</div>
-              </div>
+              <div class="meta-row"><div class="meta-label">生年月日</div><div class="meta-value" id="d-dob">1983/06/12（40歳）</div></div>
+              <div class="meta-row"><div class="meta-label">電話</div><div class="meta-value" id="d-tel">090-1234-5678</div></div>
+              <div class="meta-row"><div class="meta-label">メール</div><div class="meta-value" id="d-email" style="font-size:12px">yamada@example.com</div></div>
+              <div class="meta-row"><div class="meta-label">住所</div><div class="meta-value" id="d-addr">東京都新宿区 1-2-3</div></div>
+              <div class="meta-row"><div class="meta-label">担当者</div><div class="meta-value">鏡 祥太</div></div>
             </div>
             <div class="divider"></div>
-            <div style="display:flex; gap:8px;">
-              <button class="btn" style="flex:1; justify-content:center;" onclick="openModal('memo')">メモ</button>
-              <button class="btn btn-primary" style="flex:1; justify-content:center;" onclick="openModal('add-policy')">＋ 契約追加</button>
+            <div style="display:flex;gap:8px">
+              <button class="btn" style="flex:1;justify-content:center" onclick="openModal('memo')">メモ</button>
+              <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="openModal('add-policy')">＋ 契約追加</button>
             </div>
           </div>
-
           <div class="client-card">
-            <div class="panel-title" style="margin-bottom:12px;">タグ</div>
+            <div class="panel-title" style="margin-bottom:12px">タグ</div>
             <div class="tag-row">
               <span class="badge amber">要フォロー</span>
               <span class="badge blue">VIP</span>
               <span class="badge gray">法人関係</span>
             </div>
           </div>
-
           <div class="client-card">
-            <div class="panel-title" style="margin-bottom:12px;">メモ</div>
-            <div style="font-size:12.5px; color:var(--text2); line-height:1.7;">
-              2026/04/05 面談済み。更新の意向あり。家族構成の変化で医療保険の見直しも検討中。
-            </div>
+            <div class="panel-title" style="margin-bottom:12px">メモ</div>
+            <div style="font-size:12.5px;color:var(--text2);line-height:1.7">2026/04/05 面談済み。更新の意向あり。家族構成の変化で医療保険の見直しも検討中。</div>
           </div>
         </div>
-
-        <!-- Right -->
         <div class="detail-main">
           <div class="policy-card">
             <div class="policy-header">
-              <div class="policy-icon life">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 17s-7-5-7-10a7 7 0 0114 0c0 5-7 10-7 10z" stroke="#1E4D8C" stroke-width="1.5"/></svg>
-              </div>
-              <div>
-                <div class="policy-title">終身生命保険</div>
-                <div class="policy-company">○○生命保険 株式会社</div>
-              </div>
-              <div class="policy-actions">
-                <span class="badge red">要対応</span>
-                <button class="btn" style="padding:5px 10px; font-size:12px;">編集</button>
-              </div>
+              <div class="policy-icon life"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 17s-7-5-7-10a7 7 0 0114 0c0 5-7 10-7 10z" stroke="#1E4D8C" stroke-width="1.5"/></svg></div>
+              <div><div class="policy-title">終身生命保険</div><div class="policy-company">○○生命保険 株式会社</div></div>
+              <div class="policy-actions"><span class="badge red">要対応</span><button class="btn" style="padding:5px 10px;font-size:12px">編集</button></div>
             </div>
             <div class="policy-body">
-              <div class="policy-field">
-                <div class="pf-label">証券番号</div>
-                <div class="pf-value mono">LF-20230412</div>
-              </div>
-              <div class="policy-field">
-                <div class="pf-label">保険金額</div>
-                <div class="pf-value">3,000万円</div>
-              </div>
-              <div class="policy-field">
-                <div class="pf-label">保険料/月</div>
-                <div class="pf-value">¥24,800</div>
-              </div>
-              <div class="policy-field">
-                <div class="pf-label">更新日</div>
-                <div class="pf-value" style="color:var(--red); font-weight:600;">2026/04/10</div>
-              </div>
+              <div><div class="pf-label">証券番号</div><div class="pf-value mono">LF-20230412</div></div>
+              <div><div class="pf-label">保険金額</div><div class="pf-value">3,000万円</div></div>
+              <div><div class="pf-label">保険料/月</div><div class="pf-value">¥24,800</div></div>
+              <div><div class="pf-label">更新日</div><div class="pf-value" style="color:var(--red);font-weight:600">2026/04/10</div></div>
             </div>
           </div>
-
           <div class="policy-card">
             <div class="policy-header">
-              <div class="policy-icon medical">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="8" y="3" width="4" height="14" rx="1" fill="#B91C1C"/><rect x="3" y="8" width="14" height="4" rx="1" fill="#B91C1C"/></svg>
-              </div>
-              <div>
-                <div class="policy-title">医療保険（入院特約付）</div>
-                <div class="policy-company">△△損保 株式会社</div>
-              </div>
-              <div class="policy-actions">
-                <span class="badge green">正常</span>
-                <button class="btn" style="padding:5px 10px; font-size:12px;">編集</button>
-              </div>
+              <div class="policy-icon medical"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="8" y="3" width="4" height="14" rx="1" fill="#B91C1C"/><rect x="3" y="8" width="14" height="4" rx="1" fill="#B91C1C"/></svg></div>
+              <div><div class="policy-title">医療保険（入院特約付）</div><div class="policy-company">△△損保 株式会社</div></div>
+              <div class="policy-actions"><span class="badge green">正常</span><button class="btn" style="padding:5px 10px;font-size:12px">編集</button></div>
             </div>
             <div class="policy-body">
-              <div class="policy-field">
-                <div class="pf-label">証券番号</div>
-                <div class="pf-value mono">MD-20210815</div>
-              </div>
-              <div class="policy-field">
-                <div class="pf-label">入院日額</div>
-                <div class="pf-value">¥10,000/日</div>
-              </div>
-              <div class="policy-field">
-                <div class="pf-label">保険料/月</div>
-                <div class="pf-value">¥8,200</div>
-              </div>
-              <div class="policy-field">
-                <div class="pf-label">更新日</div>
-                <div class="pf-value mono">2028/08/15</div>
-              </div>
+              <div><div class="pf-label">証券番号</div><div class="pf-value mono">MD-20210815</div></div>
+              <div><div class="pf-label">入院日額</div><div class="pf-value">¥10,000/日</div></div>
+              <div><div class="pf-label">保険料/月</div><div class="pf-value">¥8,200</div></div>
+              <div><div class="pf-label">更新日</div><div class="pf-value mono">2028/08/15</div></div>
             </div>
           </div>
-
           <div class="policy-card">
             <div class="policy-header">
-              <div class="policy-icon fire">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3c0 4-5 5-5 9a5 5 0 0010 0c0-4-5-5-5-9z" stroke="#B45309" stroke-width="1.5"/></svg>
-              </div>
-              <div>
-                <div class="policy-title">火災保険</div>
-                <div class="policy-company">□□共済</div>
-              </div>
-              <div class="policy-actions">
-                <span class="badge green">正常</span>
-                <button class="btn" style="padding:5px 10px; font-size:12px;">編集</button>
-              </div>
+              <div class="policy-icon fire"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3c0 4-5 5-5 9a5 5 0 0010 0c0-4-5-5-5-9z" stroke="#B45309" stroke-width="1.5"/></svg></div>
+              <div><div class="policy-title">火災保険</div><div class="policy-company">□□共済</div></div>
+              <div class="policy-actions"><span class="badge green">正常</span><button class="btn" style="padding:5px 10px;font-size:12px">編集</button></div>
             </div>
             <div class="policy-body">
-              <div class="policy-field">
-                <div class="pf-label">証券番号</div>
-                <div class="pf-value mono">FR-20190301</div>
-              </div>
-              <div class="policy-field">
-                <div class="pf-label">建物保険金</div>
-                <div class="pf-value">2,000万円</div>
-              </div>
-              <div class="policy-field">
-                <div class="pf-label">保険料/年</div>
-                <div class="pf-value">¥64,000</div>
-              </div>
-              <div class="policy-field">
-                <div class="pf-label">満期日</div>
-                <div class="pf-value mono">2029/03/01</div>
-              </div>
+              <div><div class="pf-label">証券番号</div><div class="pf-value mono">FR-20190301</div></div>
+              <div><div class="pf-label">建物保険金</div><div class="pf-value">2,000万円</div></div>
+              <div><div class="pf-label">保険料/年</div><div class="pf-value">¥64,000</div></div>
+              <div><div class="pf-label">満期日</div><div class="pf-value mono">2029/03/01</div></div>
             </div>
           </div>
-
-          <button class="btn" style="width:100%; justify-content:center; padding:11px;" onclick="openModal('add-policy')">
-            ＋ 契約を追加する
-          </button>
+          <button class="btn" style="width:100%;justify-content:center;padding:11px" onclick="openModal('add-policy')">＋ 契約を追加する</button>
         </div>
       </div>
     </div>
 
-    <!-- ===== VIEW: REMINDERS ===== -->
+    <!-- REMINDERS -->
     <div class="view" id="view-reminders">
       <div class="reminder-layout">
         <div>
-          <!-- Calendar -->
-          <div class="calendar-wrap" style="margin-bottom:16px;">
+          <div class="calendar-wrap" style="margin-bottom:16px">
             <div class="cal-header">
-              <div class="cal-nav" onclick="changeMonth(-1)">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2L4 6l4 4"/></svg>
-              </div>
+              <div class="cal-nav" onclick="changeMonth(-1)"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2L4 6l4 4"/></svg></div>
               <div class="cal-month" id="cal-month-label">2026年 4月</div>
-              <div class="cal-nav" onclick="changeMonth(1)">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2l4 4-4 4"/></svg>
-              </div>
+              <div class="cal-nav" onclick="changeMonth(1)"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2l4 4-4 4"/></svg></div>
             </div>
             <div class="cal-grid">
               <div class="cal-dow">
-                <div class="cal-dow-cell">日</div>
-                <div class="cal-dow-cell">月</div>
-                <div class="cal-dow-cell">火</div>
-                <div class="cal-dow-cell">水</div>
-                <div class="cal-dow-cell">木</div>
-                <div class="cal-dow-cell">金</div>
-                <div class="cal-dow-cell">土</div>
+                <div class="cal-dow-cell">日</div><div class="cal-dow-cell">月</div><div class="cal-dow-cell">火</div><div class="cal-dow-cell">水</div><div class="cal-dow-cell">木</div><div class="cal-dow-cell">金</div><div class="cal-dow-cell">土</div>
               </div>
               <div class="cal-days" id="cal-days"></div>
             </div>
           </div>
-
-          <!-- Reminder list -->
-          <div style="font-size:12px; font-weight:600; color:var(--text3); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:10px;">対応リスト</div>
-          <div class="reminder-list" id="reminder-list">
-            <!-- injected -->
-          </div>
+          <div style="font-size:12px;font-weight:600;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:10px">対応リスト</div>
+          <div class="reminder-list" id="reminder-list"></div>
         </div>
-
         <div class="remind-stats">
-          <div class="stat-mini">
-            <div class="stat-mini-icon red">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--red)" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M9 5v4M9 13h.01"/></svg>
-            </div>
-            <div>
-              <div class="stat-mini-num red">3</div>
-              <div class="stat-mini-label">7日以内の満期</div>
-            </div>
-          </div>
-          <div class="stat-mini">
-            <div class="stat-mini-icon amber">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--amber)" stroke-width="1.5"><path d="M9 2a5 5 0 00-5 5v4l-1.5 2.5h13L14 11V7A5 5 0 009 2z"/><path d="M7.5 15a1.5 1.5 0 003 0"/></svg>
-            </div>
-            <div>
-              <div class="stat-mini-num amber">5</div>
-              <div class="stat-mini-label">30日以内の満期</div>
-            </div>
-          </div>
-          <div class="stat-mini">
-            <div class="stat-mini-icon green">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--green)" stroke-width="1.5"><path d="M3 9l4.5 4.5L15 4.5"/></svg>
-            </div>
-            <div>
-              <div class="stat-mini-num green">12</div>
-              <div class="stat-mini-label">今月対応済み</div>
-            </div>
-          </div>
-
-          <div class="panel" style="margin-top:4px;">
-            <div class="panel-header"><div class="panel-title" style="font-size:12px;">今後の満期（60日）</div></div>
-            <div style="padding:12px 16px; display:flex; flex-direction:column; gap:10px;">
-              <div style="display:flex; justify-content:space-between; font-size:12.5px;">
-                <span>04/10</span><span style="font-weight:500;">山田 太郎 — 生命</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:12.5px;">
-                <span>04/14</span><span style="font-weight:500;">田中 美咲 — 自動車</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--text3);">
-                <span>04/25</span><span>佐藤 健一 — 火災</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--text3);">
-                <span>05/01</span><span>鈴木 花子 — 医療</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--text3);">
-                <span>05/06</span><span>伊藤 誠 — 生命</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--text3);">
-                <span>05/15</span><span>渡辺 律子 — 火災</span>
-              </div>
+          <div class="stat-mini"><div class="stat-mini-icon red"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--red)" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M9 5v4M9 13h.01"/></svg></div><div><div class="stat-mini-num red">3</div><div class="stat-mini-label">7日以内の満期</div></div></div>
+          <div class="stat-mini"><div class="stat-mini-icon amber"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--amber)" stroke-width="1.5"><path d="M9 2a5 5 0 00-5 5v4l-1.5 2.5h13L14 11V7A5 5 0 009 2z"/><path d="M7.5 15a1.5 1.5 0 003 0"/></svg></div><div><div class="stat-mini-num amber">5</div><div class="stat-mini-label">30日以内の満期</div></div></div>
+          <div class="stat-mini"><div class="stat-mini-icon green"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--green)" stroke-width="1.5"><path d="M3 9l4.5 4.5L15 4.5"/></svg></div><div><div class="stat-mini-num green">12</div><div class="stat-mini-label">今月対応済み</div></div></div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title" style="font-size:12px">今後の満期（60日）</div></div>
+            <div style="padding:12px 16px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;font-size:12.5px"><span>04/10</span><span style="font-weight:500">山田 太郎 — 生命</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px"><span>04/14</span><span style="font-weight:500">田中 美咲 — 自動車</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--text3)"><span>04/25</span><span>佐藤 健一 — 火災</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--text3)"><span>05/01</span><span>鈴木 花子 — 医療</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--text3)"><span>05/06</span><span>伊藤 誠 — 生命</span></div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ===== VIEW: REPORT ===== -->
+    <!-- REPORT -->
     <div class="view" id="view-report">
       <div class="kpi-grid">
-        <div class="kpi-card accent">
-          <div class="kpi-label">生命保険</div>
-          <div class="kpi-value">58件</div>
-          <div class="kpi-sub">¥6.8M / 年</div>
-        </div>
-        <div class="kpi-card amber">
-          <div class="kpi-label">医療保険</div>
-          <div class="kpi-value">43件</div>
-          <div class="kpi-sub">¥2.4M / 年</div>
-        </div>
-        <div class="kpi-card green">
-          <div class="kpi-label">火災保険</div>
-          <div class="kpi-value">27件</div>
-          <div class="kpi-sub">¥1.8M / 年</div>
-        </div>
-        <div class="kpi-card" style="">
-          <div class="kpi-label">自動車保険</div>
-          <div class="kpi-value">14件</div>
-          <div class="kpi-sub">¥1.4M / 年</div>
-        </div>
+        <div class="kpi-card accent"><div class="kpi-label">生命保険</div><div class="kpi-value">58件</div><div class="kpi-sub">¥6.8M / 年</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">医療保険</div><div class="kpi-value">43件</div><div class="kpi-sub">¥2.4M / 年</div></div>
+        <div class="kpi-card green"><div class="kpi-label">火災保険</div><div class="kpi-value">27件</div><div class="kpi-sub">¥1.8M / 年</div></div>
+        <div class="kpi-card"><div class="kpi-label">自動車保険</div><div class="kpi-value">14件</div><div class="kpi-sub">¥1.4M / 年</div></div>
       </div>
-
       <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">顧客別 契約サマリー</div>
-          <button class="btn" style="font-size:12px; padding:5px 10px;">CSV出力</button>
-        </div>
+        <div class="panel-header"><div class="panel-title">顧客別 契約サマリー</div><button class="btn" style="font-size:12px;padding:5px 10px">CSV出力</button></div>
         <table>
-          <thead>
-            <tr>
-              <th>顧客名</th>
-              <th>契約数</th>
-              <th>生命</th>
-              <th>医療</th>
-              <th>火災</th>
-              <th>自動車</th>
-              <th>合計保険料/年</th>
-            </tr>
-          </thead>
+          <thead><tr><th>顧客名</th><th>契約数</th><th>生命</th><th>医療</th><th>火災</th><th>自動車</th><th>合計保険料/年</th></tr></thead>
           <tbody>
             <tr><td class="td-name">山田 太郎</td><td>3</td><td>✓</td><td>✓</td><td>✓</td><td>—</td><td style="font-family:var(--mono)">¥434,400</td></tr>
             <tr><td class="td-name">田中 美咲</td><td>2</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td style="font-family:var(--mono)">¥218,000</td></tr>
@@ -1497,220 +453,128 @@ tbody td:first-child { padding-left: 18px; }
       </div>
     </div>
 
-  </div><!-- /content -->
-</div><!-- /main -->
+  </div>
+</div>
 
-<!-- ===== MODALS ===== -->
-
-<!-- New Client -->
+<!-- MODALS -->
 <div class="modal-overlay" id="modal-new-client">
   <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">顧客を追加</div>
-      <button class="modal-close" onclick="closeModal('new-client')">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l10 10M11 1L1 11"/></svg>
-      </button>
-    </div>
+    <div class="modal-header"><div class="modal-title">顧客を追加</div><button class="modal-close" onclick="closeModal('new-client')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l10 10M11 1L1 11"/></svg></button></div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="field">
-          <div class="field-label">姓</div>
-          <input type="text" placeholder="山田">
-        </div>
-        <div class="field">
-          <div class="field-label">名</div>
-          <input type="text" placeholder="太郎">
-        </div>
-        <div class="field">
-          <div class="field-label">フリガナ（姓）</div>
-          <input type="text" placeholder="ヤマダ">
-        </div>
-        <div class="field">
-          <div class="field-label">フリガナ（名）</div>
-          <input type="text" placeholder="タロウ">
-        </div>
-        <div class="field">
-          <div class="field-label">生年月日</div>
-          <input type="date">
-        </div>
-        <div class="field">
-          <div class="field-label">性別</div>
-          <select><option>男性</option><option>女性</option><option>その他</option></select>
-        </div>
-        <div class="field form-full">
-          <div class="field-label">電話番号</div>
-          <input type="tel" placeholder="090-0000-0000">
-        </div>
-        <div class="field form-full">
-          <div class="field-label">メールアドレス</div>
-          <input type="email" placeholder="example@email.com">
-        </div>
-        <div class="field form-full">
-          <div class="field-label">住所</div>
-          <input type="text" placeholder="東京都 新宿区 1-2-3">
-        </div>
-        <div class="field form-full">
-          <div class="field-label">メモ</div>
-          <textarea placeholder="初回接触の経緯、特記事項など..."></textarea>
-        </div>
+        <div class="field"><div class="field-label">姓</div><input type="text" placeholder="山田"></div>
+        <div class="field"><div class="field-label">名</div><input type="text" placeholder="太郎"></div>
+        <div class="field"><div class="field-label">フリガナ（姓）</div><input type="text" placeholder="ヤマダ"></div>
+        <div class="field"><div class="field-label">フリガナ（名）</div><input type="text" placeholder="タロウ"></div>
+        <div class="field"><div class="field-label">生年月日</div><input type="date"></div>
+        <div class="field"><div class="field-label">性別</div><select><option>男性</option><option>女性</option><option>その他</option></select></div>
+        <div class="field form-full"><div class="field-label">電話番号</div><input type="tel" placeholder="090-0000-0000"></div>
+        <div class="field form-full"><div class="field-label">メールアドレス</div><input type="email" placeholder="example@email.com"></div>
+        <div class="field form-full"><div class="field-label">住所</div><input type="text" placeholder="東京都 新宿区 1-2-3"></div>
+        <div class="field form-full"><div class="field-label">メモ</div><textarea placeholder="初回接触の経緯、特記事項など..."></textarea></div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('new-client')">キャンセル</button>
-      <button class="btn btn-primary" onclick="closeModal('new-client')">追加する</button>
-    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('new-client')">キャンセル</button><button class="btn btn-primary" onclick="closeModal('new-client')">追加する</button></div>
   </div>
 </div>
 
-<!-- Add Policy -->
 <div class="modal-overlay" id="modal-add-policy">
   <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">契約を追加</div>
-      <button class="modal-close" onclick="closeModal('add-policy')">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l10 10M11 1L1 11"/></svg>
-      </button>
-    </div>
+    <div class="modal-header"><div class="modal-title">契約を追加</div><button class="modal-close" onclick="closeModal('add-policy')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l10 10M11 1L1 11"/></svg></button></div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="field form-full">
-          <div class="field-label">保険種別</div>
-          <select>
-            <option>生命保険</option>
-            <option>医療保険</option>
-            <option>火災保険</option>
-            <option>自動車保険</option>
-            <option>その他</option>
-          </select>
-        </div>
-        <div class="field form-full">
-          <div class="field-label">保険会社</div>
-          <input type="text" placeholder="○○生命保険 株式会社">
-        </div>
-        <div class="field form-full">
-          <div class="field-label">証券番号</div>
-          <input type="text" placeholder="LF-XXXXXXXX">
-        </div>
-        <div class="field">
-          <div class="field-label">保険料（月額）</div>
-          <input type="number" placeholder="24800">
-        </div>
-        <div class="field">
-          <div class="field-label">保険金額</div>
-          <input type="text" placeholder="3,000万円">
-        </div>
-        <div class="field">
-          <div class="field-label">契約開始日</div>
-          <input type="date">
-        </div>
-        <div class="field">
-          <div class="field-label">満期・更新日</div>
-          <input type="date">
-        </div>
-        <div class="field form-full">
-          <div class="field-label">備考</div>
-          <textarea placeholder="特約内容、注意事項など..."></textarea>
-        </div>
+        <div class="field form-full"><div class="field-label">保険種別</div><select><option>生命保険</option><option>医療保険</option><option>火災保険</option><option>自動車保険</option><option>その他</option></select></div>
+        <div class="field form-full"><div class="field-label">保険会社</div><input type="text" placeholder="○○生命保険 株式会社"></div>
+        <div class="field form-full"><div class="field-label">証券番号</div><input type="text" placeholder="LF-XXXXXXXX"></div>
+        <div class="field"><div class="field-label">保険料（月額）</div><input type="number" placeholder="24800"></div>
+        <div class="field"><div class="field-label">保険金額</div><input type="text" placeholder="3,000万円"></div>
+        <div class="field"><div class="field-label">契約開始日</div><input type="date"></div>
+        <div class="field"><div class="field-label">満期・更新日</div><input type="date"></div>
+        <div class="field form-full"><div class="field-label">備考</div><textarea placeholder="特約内容、注意事項など..."></textarea></div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('add-policy')">キャンセル</button>
-      <button class="btn btn-primary" onclick="closeModal('add-policy')">追加する</button>
-    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('add-policy')">キャンセル</button><button class="btn btn-primary" onclick="closeModal('add-policy')">追加する</button></div>
   </div>
 </div>
 
-<!-- Memo -->
 <div class="modal-overlay" id="modal-memo">
   <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">メモを追加</div>
-      <button class="modal-close" onclick="closeModal('memo')">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l10 10M11 1L1 11"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="field">
-        <div class="field-label">内容</div>
-        <textarea style="min-height:120px;" placeholder="面談内容、連絡メモなど..."></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('memo')">キャンセル</button>
-      <button class="btn btn-primary" onclick="closeModal('memo')">保存</button>
-    </div>
+    <div class="modal-header"><div class="modal-title">メモを追加</div><button class="modal-close" onclick="closeModal('memo')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l10 10M11 1L1 11"/></svg></button></div>
+    <div class="modal-body"><div class="field"><div class="field-label">内容</div><textarea style="min-height:120px" placeholder="面談内容、連絡メモなど..."></textarea></div></div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('memo')">キャンセル</button><button class="btn btn-primary" onclick="closeModal('memo')">保存</button></div>
   </div>
 </div>
 
+<!-- FEEDBACK BUTTON -->
+<a href="https://forms.gle/RUY6kSLm1MzaMf8D7" target="_blank" id="feedback-btn" style="position:fixed;bottom:24px;right:24px;background:#1E4D8C;color:#fff;font-family:'DM Sans','Noto Sans JP',sans-serif;font-size:13px;font-weight:500;padding:10px 18px;border-radius:999px;text-decoration:none;display:flex;align-items:center;gap:7px;box-shadow:0 4px 16px rgba(30,77,140,0.25);letter-spacing:-0.01em;z-index:99;transition:background 0.15s" onmouseover="this.style.background='#183f75'" onmouseout="this.style.background='#1E4D8C'">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="1.8"><path d="M7 1C3.686 1 1 3.462 1 6.5c0 1.426.576 2.72 1.515 3.675L2 13l3.09-1.174A6.3 6.3 0 007 12c3.314 0 6-2.462 6-5.5S10.314 1 7 1z"/></svg>
+  欲しい機能を教えてください
+</a>
+
 <script>
-// ===== DATA =====
 const clients = [
-  { id:'yamada', name:'山田 太郎', kana:'ヤマダ タロウ', types:['生命','医療','火災'], company:'○○生命 / □□共済', expiry:'2026/04/10', premium:434400, status:'urgent' },
-  { id:'tanaka', name:'田中 美咲', kana:'タナカ ミサキ', types:['生命','自動車'], company:'○○生命 / △△損保', expiry:'2026/04/14', premium:218000, status:'urgent' },
-  { id:'sato',   name:'佐藤 健一', kana:'サトウ ケンイチ', types:['医療','火災'], company:'△△損保 / □□共済', expiry:'2026/04/25', premium:162400, status:'soon' },
-  { id:'suzuki', name:'鈴木 花子', kana:'スズキ ハナコ', types:['生命'], company:'○○生命', expiry:'2026/05/01', premium:96000, status:'soon' },
-  { id:'ito',    name:'伊藤 誠', kana:'イトウ マコト', types:['生命','医療','自動車'], company:'◇◇生命 / △△損保', expiry:'2026/05/06', premium:312000, status:'soon' },
-  { id:'watanabe',name:'渡辺 律子', kana:'ワタナベ リツコ', types:['火災'], company:'□□共済', expiry:'2026/05/20', premium:64000, status:'normal' },
-  { id:'nakamura',name:'中村 健二', kana:'ナカムラ ケンジ', types:['生命','医療'], company:'◇◇生命', expiry:'2026/06/15', premium:188000, status:'normal' },
-  { id:'kobayashi',name:'小林 由美', kana:'コバヤシ ユミ', types:['医療'], company:'△△損保', expiry:'2026/07/30', premium:72000, status:'normal' },
-  { id:'kato',   name:'加藤 亮', kana:'カトウ リョウ', types:['生命','火災','自動車'], company:'○○生命 / △△損保', expiry:'2026/08/10', premium:396000, status:'normal' },
-  { id:'yoshida',name:'吉田 奈々', kana:'ヨシダ ナナ', types:['生命'], company:'◇◇生命', expiry:'2026/09/20', premium:108000, status:'normal' },
+  {id:'yamada',name:'山田 太郎',kana:'ヤマダ タロウ',types:['生命','医療','火災'],company:'○○生命 / □□共済',expiry:'2026/04/10',premium:434400,status:'urgent'},
+  {id:'tanaka',name:'田中 美咲',kana:'タナカ ミサキ',types:['生命','自動車'],company:'○○生命 / △△損保',expiry:'2026/04/14',premium:218000,status:'urgent'},
+  {id:'sato',name:'佐藤 健一',kana:'サトウ ケンイチ',types:['医療','火災'],company:'△△損保 / □□共済',expiry:'2026/04/25',premium:162400,status:'soon'},
+  {id:'suzuki',name:'鈴木 花子',kana:'スズキ ハナコ',types:['生命'],company:'○○生命',expiry:'2026/05/01',premium:96000,status:'soon'},
+  {id:'ito',name:'伊藤 誠',kana:'イトウ マコト',types:['生命','医療','自動車'],company:'◇◇生命 / △△損保',expiry:'2026/05/06',premium:312000,status:'soon'},
+  {id:'watanabe',name:'渡辺 律子',kana:'ワタナベ リツコ',types:['火災'],company:'□□共済',expiry:'2026/05/20',premium:64000,status:'normal'},
+  {id:'nakamura',name:'中村 健二',kana:'ナカムラ ケンジ',types:['生命','医療'],company:'◇◇生命',expiry:'2026/06/15',premium:188000,status:'normal'},
+  {id:'kobayashi',name:'小林 由美',kana:'コバヤシ ユミ',types:['医療'],company:'△△損保',expiry:'2026/07/30',premium:72000,status:'normal'},
+  {id:'kato',name:'加藤 亮',kana:'カトウ リョウ',types:['生命','火災','自動車'],company:'○○生命 / △△損保',expiry:'2026/08/10',premium:396000,status:'normal'},
+  {id:'yoshida',name:'吉田 奈々',kana:'ヨシダ ナナ',types:['生命'],company:'◇◇生命',expiry:'2026/09/20',premium:108000,status:'normal'},
 ];
 
 const reminders = [
-  { name:'山田 太郎', desc:'生命保険 / ○○生命 — 満期・更新', days:3, level:'red', done:false },
-  { name:'田中 美咲', desc:'自動車保険 / △△損保 — 更新', days:7, level:'red', done:false },
-  { name:'佐藤 健一', desc:'火災保険 / □□共済 — 満期', days:18, level:'amber', done:false },
-  { name:'鈴木 花子', desc:'医療保険 / ◇◇生命 — 更新', days:24, level:'amber', done:false },
-  { name:'伊藤 誠',   desc:'生命保険 / ◇◇生命 — 変額', days:29, level:'amber', done:false },
-  { name:'渡辺 律子', desc:'火災保険 / △△損保', days:43, level:'green', done:true },
+  {name:'山田 太郎',desc:'生命保険 / ○○生命 — 満期・更新',days:3,level:'red',done:false},
+  {name:'田中 美咲',desc:'自動車保険 / △△損保 — 更新',days:7,level:'red',done:false},
+  {name:'佐藤 健一',desc:'火災保険 / □□共済 — 満期',days:18,level:'amber',done:false},
+  {name:'鈴木 花子',desc:'医療保険 / ◇◇生命 — 更新',days:24,level:'amber',done:false},
+  {name:'伊藤 誠',desc:'生命保険 / ◇◇生命 — 変額',days:29,level:'amber',done:false},
+  {name:'渡辺 律子',desc:'火災保険 / △△損保',days:43,level:'green',done:true},
 ];
 
-// ===== VIEW MANAGEMENT =====
+const clientDetails = {
+  yamada:{name:'山田 太郎',kana:'ヤマダ タロウ',dob:'1983/06/12（40歳）',tel:'090-1234-5678',email:'yamada@example.com',addr:'東京都新宿区 1-2-3'},
+  tanaka:{name:'田中 美咲',kana:'タナカ ミサキ',dob:'1990/03/05（34歳）',tel:'080-9876-5432',email:'tanaka@example.com',addr:'東京都渋谷区 4-5-6'},
+};
+
+let currentFilter = 'all';
+let calYear = 2026, calMonth = 3;
+
 function showView(id, navEl) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
   document.getElementById('view-' + id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
   if (navEl) navEl.classList.add('active');
-  const titles = { dashboard:'ダッシュボード', clients:'顧客一覧', detail:'顧客詳細', reminders:'リマインド管理', report:'集計・分析' };
+  var titles = {dashboard:'ダッシュボード',clients:'顧客一覧',detail:'顧客詳細',reminders:'リマインド管理',report:'集計・分析'};
   document.getElementById('page-title').textContent = titles[id] || '';
   if (id === 'clients') renderTable(clients);
   if (id === 'reminders') { renderCalendar(); renderReminders(); }
 }
 
-// ===== CLIENT TABLE =====
-function statusBadge(s) {
-  if (s === 'urgent') return '<span class="badge red">要対応</span>';
-  if (s === 'soon')   return '<span class="badge amber">30日以内</span>';
-  return '<span class="badge green">正常</span>';
-}
-
-function expiryClass(s) {
-  if (s === 'urgent') return 'urgent';
-  if (s === 'soon') return 'soon';
-  return '';
-}
-
 function renderTable(data) {
-  const tbody = document.getElementById('client-tbody');
-  tbody.innerHTML = data.map(c => `
-    <tr onclick="openClientDetail('${c.id}')">
-      <td><div class="td-name">${c.name}</div><div class="td-kana">${c.kana}</div></td>
-      <td>${c.types.map(t => `<span class="badge blue" style="margin-right:3px;">${t}</span>`).join('')}</td>
-      <td style="font-size:12.5px; color:var(--text2);">${c.company}</td>
-      <td class="td-expiry ${expiryClass(c.status)}">${c.expiry}</td>
-      <td style="font-family:var(--mono); font-size:12.5px;">¥${c.premium.toLocaleString()}</td>
-      <td>${statusBadge(c.status)}</td>
-    </tr>
-  `).join('');
+  var tbody = document.getElementById('client-tbody');
+  tbody.innerHTML = data.map(function(c) {
+    var statusBadge = c.status === 'urgent' ? '<span class="badge red">要対応</span>' : c.status === 'soon' ? '<span class="badge amber">30日以内</span>' : '<span class="badge green">正常</span>';
+    var expiryClass = c.status === 'urgent' ? 'urgent' : c.status === 'soon' ? 'soon' : '';
+    var types = c.types.map(function(t){ return '<span class="badge blue" style="margin-right:3px">' + t + '</span>'; }).join('');
+    return '<tr onclick="openClientDetail(\'' + c.id + '\')">' +
+      '<td><div class="td-name">' + c.name + '</div><div class="td-kana">' + c.kana + '</div></td>' +
+      '<td>' + types + '</td>' +
+      '<td style="font-size:12.5px;color:var(--text2)">' + c.company + '</td>' +
+      '<td class="td-expiry ' + expiryClass + '">' + c.expiry + '</td>' +
+      '<td style="font-family:var(--mono);font-size:12.5px">¥' + c.premium.toLocaleString() + '</td>' +
+      '<td>' + statusBadge + '</td>' +
+      '</tr>';
+  }).join('');
   document.getElementById('client-count').textContent = data.length + '件';
 }
 
-let currentFilter = 'all';
 function filterTable(q) {
-  const filtered = clients.filter(c => {
-    const matchQ = !q || c.name.includes(q) || c.kana.includes(q);
-    const matchS = currentFilter === 'all' || c.status === currentFilter;
+  var filtered = clients.filter(function(c) {
+    var matchQ = !q || c.name.includes(q) || c.kana.includes(q);
+    var matchS = currentFilter === 'all' || c.status === currentFilter;
     return matchQ && matchS;
   });
   renderTable(filtered);
@@ -1718,19 +582,13 @@ function filterTable(q) {
 
 function filterStatus(s, btn) {
   currentFilter = s;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
   filterTable(document.querySelector('.search-box input').value);
 }
 
-// ===== CLIENT DETAIL =====
-const clientDetails = {
-  yamada: { name:'山田 太郎', kana:'ヤマダ タロウ', dob:'1983/06/12（40歳）', tel:'090-1234-5678', email:'yamada@example.com', addr:'東京都新宿区 1-2-3' },
-  tanaka: { name:'田中 美咲', kana:'タナカ ミサキ', dob:'1990/03/05（34歳）', tel:'080-9876-5432', email:'tanaka@example.com', addr:'東京都渋谷区 4-5-6' },
-};
-
 function openClientDetail(id) {
-  const d = clientDetails[id] || { name: (clients.find(c=>c.id===id)||{}).name||'—', kana:'', dob:'—', tel:'—', email:'—', addr:'—' };
+  var d = clientDetails[id] || {name:(clients.find(function(c){return c.id===id;})||{}).name||'—',kana:'',dob:'—',tel:'—',email:'—',addr:'—'};
   document.getElementById('d-name').textContent = d.name;
   document.getElementById('d-kana').textContent = d.kana;
   document.getElementById('d-dob').textContent = d.dob;
@@ -1739,45 +597,34 @@ function openClientDetail(id) {
   document.getElementById('d-addr').textContent = d.addr;
   document.getElementById('d-avatar').textContent = d.name[0] || '?';
   showView('detail', null);
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
   document.querySelector('[onclick*=clients]').classList.add('active');
 }
 
-// ===== MODALS =====
-function openModal(id) {
-  document.getElementById('modal-' + id).classList.add('open');
-}
-function closeModal(id) {
-  document.getElementById('modal-' + id).classList.remove('open');
-}
-document.querySelectorAll('.modal-overlay').forEach(o => {
-  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+function openModal(id) { document.getElementById('modal-' + id).classList.add('open'); }
+function closeModal(id) { document.getElementById('modal-' + id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(function(o){
+  o.addEventListener('click', function(e){ if(e.target === o) o.classList.remove('open'); });
 });
 
-// ===== CALENDAR =====
-let calYear = 2026, calMonth = 3; // 0-indexed: 3 = April
-
-const eventDays = { '2026-4-10': 'red', '2026-4-14': 'red', '2026-4-25': 'amber', '2026-5-1': 'amber' };
+var eventDays = {'2026-4-10':'red','2026-4-14':'red','2026-4-25':'amber','2026-5-1':'amber'};
+var months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 
 function renderCalendar() {
-  const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
   document.getElementById('cal-month-label').textContent = calYear + '年 ' + months[calMonth];
-  const first = new Date(calYear, calMonth, 1).getDay();
-  const days = new Date(calYear, calMonth + 1, 0).getDate();
-  const today = new Date();
-  let html = '';
-  for (let i = 0; i < first; i++) {
-    const prev = new Date(calYear, calMonth, -first + i + 1);
-    html += `<div class="cal-day other-month">${prev.getDate()}</div>`;
+  var first = new Date(calYear, calMonth, 1).getDay();
+  var days = new Date(calYear, calMonth + 1, 0).getDate();
+  var today = new Date();
+  var html = '';
+  for (var i = 0; i < first; i++) {
+    var prev = new Date(calYear, calMonth, -first + i + 1);
+    html += '<div class="cal-day other-month">' + prev.getDate() + '</div>';
   }
-  for (let d = 1; d <= days; d++) {
-    const key = calYear + '-' + (calMonth+1) + '-' + d;
-    const isToday = today.getFullYear() === calYear && today.getMonth() === calMonth && today.getDate() === d;
-    const evt = eventDays[key];
-    html += `<div class="cal-day ${isToday ? 'today' : ''} ${evt ? evt+'-event' : ''}">
-      ${d}
-      <div class="event-dot" style="${evt ? 'display:block' : ''}"></div>
-    </div>`;
+  for (var d = 1; d <= days; d++) {
+    var key = calYear + '-' + (calMonth+1) + '-' + d;
+    var isToday = today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===d;
+    var evt = eventDays[key];
+    html += '<div class="cal-day' + (isToday?' today':'') + (evt?' '+evt+'-event':'') + '">' + d + '<div class="event-dot"' + (evt?' style="display:block"':'') + '></div></div>';
   }
   document.getElementById('cal-days').innerHTML = html;
 }
@@ -1789,25 +636,24 @@ function changeMonth(delta) {
   renderCalendar();
 }
 
-// ===== REMINDERS =====
 function renderReminders() {
-  const el = document.getElementById('reminder-list');
-  el.innerHTML = reminders.map((r, i) => `
-    <div class="reminder-item ${r.done ? 'done' : ''}" id="rem-${i}">
-      <div class="remind-bar ${r.level}"></div>
-      <div class="remind-body">
-        <div class="remind-name">${r.name}</div>
-        <div class="remind-desc">${r.desc}</div>
-        <div class="remind-meta">
-          <span class="badge ${r.level}">${r.days <= 7 ? '緊急' : r.days <= 30 ? '要注意' : '確認済み'}</span>
-          <span style="font-size:11px; color:var(--text3); font-family:var(--mono);">あと ${r.days}日</span>
-        </div>
-      </div>
-      <div class="remind-check" onclick="toggleReminder(${i})">
-        ${r.done ? '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><path d="M1.5 5l2.5 3 5-6"/></svg>' : ''}
-      </div>
-    </div>
-  `).join('');
+  var el = document.getElementById('reminder-list');
+  el.innerHTML = reminders.map(function(r, i) {
+    var label = r.days <= 7 ? '緊急' : r.days <= 30 ? '要注意' : '確認済み';
+    var check = r.done ? '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><path d="M1.5 5l2.5 3 5-6"/></svg>' : '';
+    return '<div class="reminder-item' + (r.done?' done':'') + '" id="rem-' + i + '">' +
+      '<div class="remind-bar ' + r.level + '"></div>' +
+      '<div class="remind-body">' +
+        '<div class="remind-name">' + r.name + '</div>' +
+        '<div class="remind-desc">' + r.desc + '</div>' +
+        '<div class="remind-meta">' +
+          '<span class="badge ' + r.level + '">' + label + '</span>' +
+          '<span style="font-size:11px;color:var(--text3);font-family:var(--mono)">あと ' + r.days + '日</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="remind-check" onclick="toggleReminder(' + i + ')">' + check + '</div>' +
+      '</div>';
+  }).join('');
 }
 
 function toggleReminder(i) {
@@ -1815,7 +661,6 @@ function toggleReminder(i) {
   renderReminders();
 }
 
-// Init
 renderTable(clients);
 renderCalendar();
 renderReminders();
