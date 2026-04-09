@@ -192,7 +192,14 @@ tbody td:first-child{padding-left:18px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
-/* ===== RESPONSIVE ===== */
+/* feedback btn: PCのみ表示 */
+#feedback-btn-pc { display: flex; }
+#nav-feedback { display: none; }
+
+@media (max-width: 768px) {
+  #feedback-btn-pc { display: none !important; }
+  #nav-feedback { display: flex; }
+}
 @media (max-width: 768px) {
   body { flex-direction: column; }
 
@@ -256,8 +263,11 @@ tbody td:first-child{padding-left:18px}
   }
 
   .main {
-    padding-bottom: 60px;
     height: 100vh;
+  }
+
+  .content {
+    padding-bottom: 80px !important;
   }
 
   .topbar { padding: 0 16px; }
@@ -355,6 +365,10 @@ tbody td:first-child{padding-left:18px}
     <div class="nav-item" onclick="showView('report',this)">
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12V4l4 3 2-4 2 4 4-3v8H2z"/></svg>
       集計・分析
+    </div>
+    <div class="nav-item" onclick="window.open('https://forms.gle/RUY6kSLm1MzaMf8D7','_blank')" id="nav-feedback" style="background:#1E4D8C;color:#fff;border-radius:8px;margin:4px 4px;">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:1"><path d="M8 1C4.686 1 2 3.462 2 6.5c0 1.426.576 2.72 1.515 3.675L3 13l3.09-1.174A6.3 6.3 0 008 12c3.314 0 6-2.462 6-5.5S11.314 1 8 1z"/></svg>
+      ご意見
     </div>
   </nav>
   <div class="sidebar-user">
@@ -628,8 +642,8 @@ tbody td:first-child{padding-left:18px}
   </div>
 </div>
 
-<!-- FEEDBACK BUTTON -->
-<a href="https://forms.gle/RUY6kSLm1MzaMf8D7" target="_blank" id="feedback-btn" style="position:fixed;bottom:24px;right:24px;background:#1E4D8C;color:#fff;font-family:'DM Sans','Noto Sans JP',sans-serif;font-size:13px;font-weight:500;padding:10px 18px;border-radius:999px;text-decoration:none;display:flex;align-items:center;gap:7px;box-shadow:0 4px 16px rgba(30,77,140,0.25);letter-spacing:-0.01em;z-index:99;transition:background 0.15s" onmouseover="this.style.background='#183f75'" onmouseout="this.style.background='#1E4D8C'">
+<!-- FEEDBACK BUTTON (PC: 右下固定) -->
+<a href="https://forms.gle/RUY6kSLm1MzaMf8D7" target="_blank" id="feedback-btn-pc" style="position:fixed;bottom:24px;right:24px;background:#1E4D8C;color:#fff;font-family:'DM Sans','Noto Sans JP',sans-serif;font-size:13px;font-weight:500;padding:10px 18px;border-radius:999px;text-decoration:none;display:flex;align-items:center;gap:7px;box-shadow:0 4px 16px rgba(30,77,140,0.25);letter-spacing:-0.01em;z-index:99;transition:background 0.15s" onmouseover="this.style.background='#183f75'" onmouseout="this.style.background='#1E4D8C'">
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="1.8"><path d="M7 1C3.686 1 1 3.462 1 6.5c0 1.426.576 2.72 1.515 3.675L2 13l3.09-1.174A6.3 6.3 0 007 12c3.314 0 6-2.462 6-5.5S10.314 1 7 1z"/></svg>
   欲しい機能を教えてください
 </a>
