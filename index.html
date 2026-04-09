@@ -191,6 +191,129 @@ tbody td:first-child{padding-left:18px}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  body { flex-direction: column; }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    z-index: 50;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: none;
+    overflow: visible;
+  }
+
+  .sidebar-logo { display: none; }
+  .sidebar-user { display: none; }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .nav-section-label { display: none; }
+
+  .nav-item {
+    flex-direction: column;
+    gap: 3px;
+    padding: 10px 8px 8px;
+    font-size: 10px;
+    border-radius: 0;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 0;
+  }
+
+  .nav-item.active {
+    background: transparent;
+    color: var(--accent-text);
+    border-top: 2px solid var(--accent);
+  }
+
+  .nav-icon { width: 20px; height: 20px; opacity: 1; }
+
+  .nav-badge {
+    position: absolute;
+    top: 6px;
+    margin-left: 10px;
+    font-size: 9px;
+    padding: 1px 4px;
+  }
+
+  .main {
+    padding-bottom: 60px;
+    height: 100vh;
+  }
+
+  .topbar { padding: 0 16px; }
+  .page-title { font-size: 14px; }
+  .btn-primary { font-size: 12px; padding: 6px 10px; }
+
+  .content { padding: 16px; }
+
+  /* KPI grid: 2列 */
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+  .kpi-value { font-size: 22px; }
+
+  /* Dashboard: 1列 */
+  .dash-grid { grid-template-columns: 1fr; }
+
+  /* Client table → カード */
+  .table-wrap { border: none; background: transparent; }
+  table, thead, tbody, th, td, tr { display: block; }
+  thead { display: none; }
+  tbody tr {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    padding: 14px 16px;
+  }
+  tbody td { padding: 3px 0; border: none; font-size: 13px; }
+  tbody td:first-child { padding-left: 0; font-size: 14px; }
+  tbody td::before {
+    content: attr(data-label);
+    font-size: 11px;
+    color: var(--text3);
+    display: block;
+    margin-bottom: 2px;
+  }
+  tbody td:first-child::before { display: none; }
+
+  /* Detail layout: 1列 */
+  .detail-layout { grid-template-columns: 1fr; }
+
+  /* Policy body: 2列 */
+  .policy-body { grid-template-columns: repeat(2, 1fr); }
+
+  /* Reminder layout: 1列 */
+  .reminder-layout { grid-template-columns: 1fr; }
+  .remind-stats { flex-direction: row; flex-wrap: wrap; gap: 10px; }
+  .stat-mini { flex: 1; min-width: 140px; }
+
+  /* Modal */
+  .modal { width: 92vw; margin: 0 auto; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-full { grid-column: 1; }
+
+  /* Feedback btn */
+  #feedback-btn { bottom: 72px; right: 16px; font-size: 12px; padding: 8px 14px; }
+}
 </style>
 </head>
 <body>
@@ -561,11 +684,11 @@ function renderTable(data) {
     var types = c.types.map(function(t){ return '<span class="badge blue" style="margin-right:3px">' + t + '</span>'; }).join('');
     return '<tr onclick="openClientDetail(\'' + c.id + '\')">' +
       '<td><div class="td-name">' + c.name + '</div><div class="td-kana">' + c.kana + '</div></td>' +
-      '<td>' + types + '</td>' +
-      '<td style="font-size:12.5px;color:var(--text2)">' + c.company + '</td>' +
-      '<td class="td-expiry ' + expiryClass + '">' + c.expiry + '</td>' +
-      '<td style="font-family:var(--mono);font-size:12.5px">¥' + c.premium.toLocaleString() + '</td>' +
-      '<td>' + statusBadge + '</td>' +
+      '<td data-label="保険種別">' + types + '</td>' +
+      '<td data-label="保険会社" style="font-size:12.5px;color:var(--text2)">' + c.company + '</td>' +
+      '<td data-label="満期日" class="td-expiry ' + expiryClass + '">' + c.expiry + '</td>' +
+      '<td data-label="保険料/年" style="font-family:var(--mono);font-size:12.5px">¥' + c.premium.toLocaleString() + '</td>' +
+      '<td data-label="ステータス">' + statusBadge + '</td>' +
       '</tr>';
   }).join('');
   document.getElementById('client-count').textContent = data.length + '件';
