@@ -192,6 +192,15 @@ tbody td:first-child{padding-left:18px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
+/* nav label 出し分け */
+.nav-label-sp { display: none; }
+.nav-label-pc { display: inline; }
+
+@media (max-width: 768px) {
+  .nav-label-sp { display: inline; }
+  .nav-label-pc { display: none; }
+}
+
 /* feedback btn: PCのみ表示 */
 #feedback-btn-pc { display: flex; }
 #nav-feedback { display: none; }
@@ -263,19 +272,22 @@ tbody td:first-child{padding-left:18px}
   }
 
   .main {
-    height: 100vh;
-    height: 100dvh;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   .content {
-    padding-bottom: 100px !important;
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 16px 120px !important;
   }
 
   .topbar { padding: 0 16px; }
   .page-title { font-size: 14px; }
   .btn-primary { font-size: 12px; padding: 6px 10px; }
-
-  .content { padding: 16px; }
 
   /* KPI grid: 2列 */
   .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
@@ -350,22 +362,22 @@ tbody td:first-child{padding-left:18px}
     <div class="nav-section-label">メイン</div>
     <div class="nav-item active" onclick="showView('dashboard',this)">
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
-      ダッシュボード
+      <span class="nav-label-pc">ダッシュボード</span><span class="nav-label-sp">ホーム</span>
     </div>
     <div class="nav-item" onclick="showView('clients',this)">
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="3"/><path d="M1 14c0-3 2-5 5-5s5 2 5 5"/><path d="M11 3c1.5.5 2 2 2 2M11 7c2 0 4 1.5 4 4"/></svg>
-      顧客一覧
+      <span class="nav-label-pc">顧客一覧</span><span class="nav-label-sp">顧客</span>
       <span class="nav-badge">142</span>
     </div>
     <div class="nav-item" onclick="showView('reminders',this)">
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a4 4 0 00-4 4v3l-1 2h10l-1-2V6a4 4 0 00-4-4z"/><path d="M6.5 12.5a1.5 1.5 0 003 0"/></svg>
-      リマインド
+      <span class="nav-label-pc">リマインド</span><span class="nav-label-sp">通知</span>
       <span class="nav-badge red">3</span>
     </div>
     <div class="nav-section-label">レポート</div>
     <div class="nav-item" onclick="showView('report',this)">
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12V4l4 3 2-4 2 4 4-3v8H2z"/></svg>
-      集計・分析
+      <span class="nav-label-pc">集計・分析</span><span class="nav-label-sp">集計</span>
     </div>
     <div class="nav-item" onclick="window.open('https://forms.gle/RUY6kSLm1MzaMf8D7','_blank')" id="nav-feedback" style="background:#1E4D8C;color:#fff;border-radius:8px;margin:4px 4px;">
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:1"><path d="M8 1C4.686 1 2 3.462 2 6.5c0 1.426.576 2.72 1.515 3.675L3 13l3.09-1.174A6.3 6.3 0 008 12c3.314 0 6-2.462 6-5.5S11.314 1 8 1z"/></svg>
